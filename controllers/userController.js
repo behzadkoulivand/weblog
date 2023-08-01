@@ -1,7 +1,8 @@
 const User = require('../models/User');
 
 exports.createUser = async (req, res)=> {
-    await userValidation(req.body);
+    
+    await User.userValidation(req.body);
 
     const {fullname, email, password} = req.body
 
