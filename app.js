@@ -2,6 +2,7 @@ const express = require('express');
 const dotEnv = require('dotenv');
 
 const connectDB = require('./config/db');
+const {errorHandler} = require('./middlewares/errors');
 
 dotEnv.config({path: "./config/config.env"});
 
@@ -15,6 +16,9 @@ app.use(express.json());
 
 // Routes
 app.use("/users", require('./routes/user'));
+
+// Error Handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
