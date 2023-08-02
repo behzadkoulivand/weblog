@@ -3,6 +3,7 @@ const dotEnv = require('dotenv');
 
 const connectDB = require('./config/db');
 const {errorHandler} = require('./middlewares/errors');
+const { setHeaders } = require('./middlewares/setHeaders');
 
 dotEnv.config({path: "./config/config.env"});
 
@@ -13,6 +14,7 @@ const app = express();
 // Body Parser
 app.use(express.urlencoded({ extended: false}));
 app.use(express.json());
+app.use(setHeaders);
 
 // Routes
 app.use("/users", require('./routes/user'));

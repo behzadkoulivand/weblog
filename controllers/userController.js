@@ -14,7 +14,6 @@ exports.login = async (req, res, next) => {
             throw error;
         }
             
-        
         const isMatch = bcrypt.compare(password, user.password);
 
         if(!isMatch){
@@ -37,7 +36,6 @@ exports.login = async (req, res, next) => {
                 res.status(200).json(token);
             });
     } catch (err) {
-        console.log(err);
         next(err);
         
     }
