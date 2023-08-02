@@ -1,4 +1,45 @@
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/User');
+
+exports.login = async (req, res, next) => {
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({email});
+
+        if(!user){
+            // return res.status(400).json("کاربری با این ایمیل ثبت نشده");
+            const error = new Error("کاربری با این ایمیل ثبت نشده است");
+            error.statusCode = 422;
+            throw error;
+        }
+            
+        
+        const isMatch = bcrypt.compare(password, user.password);
+
+        if(!isMatch){
+            // return res.status(400).json("کلمه عبور یا ایمیل اشتباه است");
+            const error = new Error("کلمه عبور یا ایمیل اشتباه است");
+            error.statusCode = 422;
+            throw error;
+        }
+            
+        const payload = {
+            user: {
+                id: user.id
+            }
+        };
+        jwt.sign(payload, "secret", 
+            {
+                expiresIn: 3600
+            }, (err, token) =>{
+                if(err) throw err;
+                res.status(200).json(token);
+            });
+    } catch (err) {
+        next(err);
+    }
+}
 
 exports.createUser = async (req, res, next) => {
     try {
@@ -20,6 +61,4 @@ exports.createUser = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-
-
 }
