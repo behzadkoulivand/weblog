@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 
@@ -8,7 +9,6 @@ exports.login = async (req, res, next) => {
         const user = await User.findOne({email});
 
         if(!user){
-            // return res.status(400).json("کاربری با این ایمیل ثبت نشده");
             const error = new Error("کاربری با این ایمیل ثبت نشده است");
             error.statusCode = 422;
             throw error;
@@ -37,7 +37,9 @@ exports.login = async (req, res, next) => {
                 res.status(200).json(token);
             });
     } catch (err) {
+        console.log(err);
         next(err);
+        
     }
 }
 
