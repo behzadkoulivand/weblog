@@ -4,37 +4,37 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 exports.login = async (req, res, next) => {
+    const {email, password} = req.body;
     try {
-        const {email, password} = req.body;
         const user = await User.findOne({email});
 
         if(!user){
             const error = new Error("کاربری با این ایمیل ثبت نشده است");
-            error.statusCode = 422;
+            error.statusCode = 404;
             throw error;
         }
             
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
-        if(!isMatch){
-            // return res.status(400).json("کلمه عبور یا ایمیل اشتباه است");
-            const error = new Error("کلمه عبور یا ایمیل اشتباه است");
+        if(isMatch){
+            const token = jwt.sign(
+                {
+                    user: {
+                        userId: user._id.toString(),
+                        email: user.email,
+                        fullname: user.fullname,
+                    },
+                },
+                process.env.JWT_SECRET
+            );
+            res.status(200).json({ token, userId: user._id.toString() });
+        } else {
+            const error = new Error("آدرس ایمیل یا کلمه عبور اشتباه است");
             error.statusCode = 422;
             throw error;
         }
             
-        const payload = {
-            user: {
-                id: user.id
-            }
-        };
-        jwt.sign(payload, "secret", 
-            {
-                expiresIn: 3600
-            }, (err, token) =>{
-                if(err) throw err;
-                res.status(200).json(token);
-            });
+        
     } catch (err) {
         next(err);
         
