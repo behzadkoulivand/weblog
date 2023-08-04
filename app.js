@@ -18,6 +18,7 @@ app.use(setHeaders);
 
 // Routes
 app.use("/users", require('./routes/user'));
+app.use("/dashboard", require('./routes/dashboard'));
 
 // Error Handler
 app.use(errorHandler);
