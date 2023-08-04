@@ -1,12 +1,10 @@
 const fs = require("fs");
 
-const multer = require("multer");
 const sharp = require("sharp");
 const shortId = require("shortid");
 const appRoot = require("app-root-path");
 
 const Blog = require("../models/Blog");
-const { fileFilter } = require("../utils/multer");
 
 // exports.editPost = async (req, res) => {
 //     const errorArr = [];
@@ -113,6 +111,7 @@ exports.createPost = async (req, res, next) => {
 
         res.status(201).json({ message: "پست جدید با موفقیت ساخته شد" });
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };

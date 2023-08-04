@@ -1,5 +1,6 @@
 const express = require('express');
 const dotEnv = require('dotenv');
+const fileUpload = require('express-fileupload');
 
 const connectDB = require('./config/db');
 const {errorHandler} = require('./middlewares/errors');
@@ -15,6 +16,9 @@ const app = express();
 app.use(express.urlencoded({ extended: false}));
 app.use(express.json());
 app.use(setHeaders);
+
+//* File Upload Middleware
+app.use(fileUpload());
 
 // Routes
 app.use("/users", require('./routes/user'));
